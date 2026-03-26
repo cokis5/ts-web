@@ -62,10 +62,6 @@
       margin-top: 30px;
       padding-top: 30px;
       border-top: 1px solid rgba(255,255,255,0.1);
-      display: none;
-    }
-    .fallback-section.show {
-      display: block;
     }
     .fallback-section h3 {
       margin-top: 0;
@@ -168,7 +164,6 @@
         if (document.hasFocus()) {
           // Focus ist noch beim Browser - die App wurde wahrscheinlich nicht gestartet
           statusText.innerHTML = '❌ Teamspeak konnte nicht automatisch geöffnet werden.';
-          fallbackSection.classList.add('show');
         } else {
           statusText.innerText = '✓ Teamspeak wird gestartet...';
         }
@@ -179,7 +174,6 @@
         setTimeout(() => {
           if (protocolAttempted && !fallbackSection.classList.contains('show')) {
             statusText.innerHTML = '❌ Die Verbindung konnte nicht hergestellt werden.';
-            fallbackSection.classList.add('show');
           }
         }, 500);
         window.removeEventListener('focus', onFocus);
