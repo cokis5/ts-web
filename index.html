@@ -89,6 +89,27 @@
       word-break: break-all;
       margin: 10px 0;
     }
+    .toggle-password-button {
+    background-color: #4CAF50; /* Grün */
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    }
+
+    .server-password {
+    margin-top: 8px;
+    padding: 8px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    display: inline-block;
+    }
   </style>
 </head>
 <body>
@@ -117,7 +138,13 @@
       <p style="margin-top: 15px; font-size: 0.9rem;">Kopiere den Link manuell oder über den Button:</p>
       <button class="copy-btn" id="copyBtn">📋 In die Zwischenablage kopieren</button>
       <div class="invite-link" id="inviteLinkDisplay">ts.goesse.me:9987</div>
-
+      
+      <div class="password-container">
+        <button onclick="togglePassword()" class="toggle-password-button">Server-Passwort anzeigen</button>
+        <div class="server-password" id="serverPasswordDisplay" style="display: none;">
+          1337
+        </div>
+      </div>
       <p style="margin-top: 15px; font-size: 0.9rem;">Öffne danach Teamspeak und füge die Addresse händisch hinzu.<br>Falls du hilfe brauchst ist hier einen Anleitung.</p>
             <p style="margin-bottom: 10px;">
             <a href="https://support.teamspeak.com/hc/en-us/articles/4408610195985-What-are-bookmarks" target="_blank" class="invite-btn secondary-btn">
