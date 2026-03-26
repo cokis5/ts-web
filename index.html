@@ -111,7 +111,7 @@
 
     <div id="fallbackSection" class="fallback-section">
       <h3>Teamspeak wurde nicht geöffnet?</h3>
-      <p style="font-size: 0.9rem;">Falls der Client nicht automatisch geöffnet wird, versuche folgende Optionen:</p>
+      <p style="font-size: 0.9rem;">Der Client konnte nicht automatisch geöffnet werden.<br> Bitte lade Teamspeak manuell herrunte und füge die Addresse händisch hinzu</p>
       
       <p style="margin-bottom: 10px;">
         <a href="https://www.teamspeak.com/en/downloads/" target="_blank" class="invite-btn secondary-btn">
@@ -119,13 +119,11 @@
         </a>
       </p>
 
-      <p style="margin-top: 15px; font-size: 0.9rem;">Und kopiere den Link manuell:</p>
+      <p style="margin-top: 15px; font-size: 0.9rem;">Kopiere den Link manuell oder über den Button:</p>
       <div class="invite-link" id="inviteLinkDisplay">ts.goesse.me:9987</div>
       <button class="copy-btn" id="copyBtn">📋 In die Zwischenablage kopieren</button>
 
-      <p style="margin-top: 15px; font-size: 0.85rem; color: #a0b0d0;">
-        Öffne danach Teamspeak und füge die Addresse händisch hinzu.
-      </p>
+      <p style="margin-top: 15px; font-size: 0.9rem;">Öffne danach Teamspeak und füge die Addresse händisch hinzu.</p>
     </div>
   </div>
 
@@ -164,7 +162,7 @@
         // Prüfe, ob der Browser den Focus verloren hat (Indiz dafür, dass eine App gestartet wurde)
         if (document.hasFocus()) {
           // Focus ist noch beim Browser - die App wurde wahrscheinlich nicht gestartet
-          statusText.innerHTML = '❌ Teamspeak konnte nicht automatisch geöffnet werden.<br>Bitte nutze eine der Optionen unten:';
+          statusText.innerHTML = '❌ Teamspeak konnte nicht automatisch geöffnet werden.';
           fallbackSection.classList.add('show');
         } else {
           statusText.innerText = '✓ Teamspeak wird gestartet...';
@@ -175,7 +173,7 @@
       window.addEventListener('focus', function onFocus() {
         setTimeout(() => {
           if (protocolAttempted && !fallbackSection.classList.contains('show')) {
-            statusText.innerHTML = '❌ Die Verbindung konnte nicht hergestellt werden.<br>Bitte nutze eine der Optionen unten:';
+            statusText.innerHTML = '❌ Die Verbindung konnte nicht hergestellt werden.';
             fallbackSection.classList.add('show');
           }
         }, 500);
