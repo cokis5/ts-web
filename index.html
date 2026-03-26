@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teamspeak Einladung</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0d162a 0%, #1d2d4e 100%);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 30px;
+      border-radius: 14px;
+      width: 320px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    h1 { margin: 0 0 16px; font-size: 1.7rem; }
+    p { margin: 0 0 20px; line-height: 1.4; }
+    .invite-btn {
+      display: inline-block;
+      padding: 12px 22px;
+      border-radius: 8px;
+      background: #54a7ff;
+      border: 0;
+      color: white;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+    .invite-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Teamspeak Einladung</h1>
+    <p>Klicke auf den Button, um dem Teamspeak-Server beizutreten:</p>
+
+    <!-- Ersetze die URL hier mit deinem echten Einladungslink -->
+    <button id="inviteBtn" class="invite-btn" type="button">
+      Teamspeak beitreten
+    </button>
+
+    <p id="statusText" style="margin-top: 16px; font-size: 0.9rem; color: #d9e6ff;">
+      Bitte warten…
+    </p>
+  </div>
+
+  <script>
+    const teamspeakUri = 'ts3server://ts.goesse.me?port=9987';
+    const downloadUrl = 'https://www.teamspeak.com/en/downloads/';
+
+    function checkAndRedirect() {
+      const start = Date.now();
+      const timeout = 1500;
+      const statusText = document.getElementById('statusText');
+
+      statusText.innerText = 'Prüfe, ob Teamspeak installiert ist...';
+
+      let iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = teamspeakUri;
+      document.body.appendChild(iframe);
+
+      const timer = setTimeout(() => {
+        const elapsed = Date.now() - start;
+
+        // Viele Browser/webpages verhindern echte App-Start-Feedback; hier vermuten wir Installation aufgrund kurzer Verzögerung
+        if (elapsed < timeout + 300) {
+          statusText.innerText = 'Teamspeak scheint nicht installiert zu sein. Weiterleitung zum Download...';
+          window.location.href = downloadUrl;
+        }
+      }, timeout);
+
+      // Cleanup
+      window.addEventListener('blur', () => {
+        clearTimeout(timer);
+        statusText.innerText = 'Teamspeak-Client wird gestartet. Wenn nichts passiert, dann nicht installiert.';
+      }, { once: true });
+
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+      }, timeout + 1000);
+    }
+
+    document.getElementById('inviteBtn').addEventListener('click', checkAndRedirect);
+  </script>
+</body>
+</html>
+  </div>
+</body>
+</html>
