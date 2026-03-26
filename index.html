@@ -49,9 +49,9 @@
     <p>Klicke auf den Button, um dem Teamspeak-Server beizutreten:</p>
 
     <!-- Ersetze die URL hier mit deinem echten Einladungslink -->
-    <button id="inviteBtn" class="invite-btn" type="button">
+    <a href="ts3server://ts.goesse.me?port=9987" id="inviteBtn" class="invite-btn">
       Teamspeak beitreten
-    </button>
+    </a>
 
     <p id="statusText" style="margin-top: 16px; font-size: 0.9rem; color: #d9e6ff;">
       Bitte warten…
@@ -68,16 +68,22 @@
       statusText.innerText = 'Teamspeak wird gestartet...';
 
       // Versuche, Teamspeak zu öffnen
-      window.location.href = teamspeakUri;
+      try {
+        window.location.href = teamspeakUri;
+      } catch (e) {
+        // Fallback, falls das Protokoll blockiert wird
+        statusText.innerText = 'Fehler beim Öffnen von Teamspeak. Bitte manuell installieren.';
+        setTimeout(() => {
+          window.location.href = downloadUrl;
+        }, 2000);
+      }
 
-      // Nach kurzer Zeit prüfen, ob die Seite noch da ist (bedeutet, dass die App nicht gestartet wurde)
+      // Hinweis anzeigen
       setTimeout(() => {
         if (document.hasFocus()) {
-          // Wenn die Seite noch fokussiert ist, wurde die App wahrscheinlich nicht gestartet
-          statusText.innerText = 'Teamspeak scheint nicht installiert zu sein. Weiterleitung zum Download...';
-          window.location.href = downloadUrl;
+          statusText.innerText = 'Wenn Teamspeak nicht startet, klicke hier: <a href="' + downloadUrl + '" target="_blank">Download Teamspeak</a>';
         }
-      }, 2000);
+      }, 3000);
     }
 
     document.getElementById('inviteBtn').addEventListener('click', checkAndRedirect);
