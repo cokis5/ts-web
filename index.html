@@ -15,31 +15,84 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+      padding: 20px;
     }
     .card {
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.2);
-      padding: 30px;
+      padding: 40px;
       border-radius: 14px;
-      width: 320px;
+      max-width: 500px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
     h1 { margin: 0 0 16px; font-size: 1.7rem; }
-    p { margin: 0 0 20px; line-height: 1.4; }
+    p { margin: 0 0 20px; line-height: 1.6; }
     .invite-btn {
       display: inline-block;
-      padding: 12px 22px;
+      padding: 12px 32px;
       border-radius: 8px;
       background: #54a7ff;
       border: 0;
       color: white;
       font-size: 1rem;
       text-decoration: none;
+      cursor: pointer;
       transition: transform .16s ease, box-shadow .16s ease;
+      margin: 10px 5px;
     }
     .invite-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    }
+    .secondary-btn {
+      background: #3d4f6f;
+      font-size: 0.9rem;
+      padding: 10px 20px;
+    }
+    .secondary-btn:hover {
+      background: #4a5f7f;
+    }
+    #statusText {
+      margin-top: 20px;
+      font-size: 0.95rem;
+      color: #d9e6ff;
+      min-height: 60px;
+    }
+    .fallback-section {
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: none;
+    }
+    .fallback-section.show {
+      display: block;
+    }
+    .fallback-section h3 {
+      margin-top: 0;
+      font-size: 0.95rem;
+      margin-bottom: 15px;
+    }
+    .copy-btn {
+      background: #54a7ff;
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+    .copy-btn:hover {
+      background: #4a9aff;
+    }
+    .invite-link {
+      background: rgba(0,0,0,0.2);
+      padding: 12px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      word-break: break-all;
+      margin: 10px 0;
     }
   </style>
 </head>
@@ -48,37 +101,95 @@
     <h1>Teamspeak Einladung</h1>
     <p>Klicke auf den Button, um dem Teamspeak-Server beizutreten:</p>
 
-    <!-- Ersetze die URL hier mit deinem echten Einladungslink -->
-    <a href="ts3server://ts.goesse.me?port=9987" id="inviteBtn" class="invite-btn">
-      Teamspeak beitreten
-    </a>
+    <button id="inviteBtn" class="invite-btn">
+      🎮 Teamspeak beitreten
+    </button>
 
-    <p id="statusText" style="margin-top: 16px; font-size: 0.9rem; color: #d9e6ff;">
-      Bitte warten…
+    <p id="statusText">
+      Klicke auf den Button um den Teamspeak-Client zu starten...
     </p>
+
+    <div id="fallbackSection" class="fallback-section">
+      <h3>Teamspeak wurde nicht geöffnet?</h3>
+      <p style="font-size: 0.9rem;">Falls der Client nicht automatisch geöffnet wird, versuche folgende Optionen:</p>
+      
+      <p style="margin-bottom: 10px;">
+        <a href="https://www.teamspeak.com/en/downloads/" target="_blank" class="invite-btn secondary-btn">
+          📥 Teamspeak herunterladen
+        </a>
+      </p>
+
+      <p style="margin-top: 15px; font-size: 0.9rem;">Oder kopiere den Link manuell:</p>
+      <div class="invite-link" id="inviteLinkDisplay">ts3server://ts.goesse.me?port=9987</div>
+      <button class="copy-btn" onclick="copyToClipboard()">📋 In die Zwischenablage kopieren</button>
+
+      <p style="margin-top: 15px; font-size: 0.85rem; color: #a0b0d0;">
+        Öffne danach Teamspeak und verwende den Link in der Adressleiste oder beim Verbindungsmenü.
+      </p>
+    </div>
   </div>
 
   <script>
     const teamspeakUri = 'ts3server://ts.goesse.me?port=9987';
+    const statusText = document.getElementById('statusText');
+    const fallbackSection = document.getElementById('fallbackSection');
+    let protocolAttempted = false;
+
+    function copyToClipboard() {
+      const link = 'ts3server://ts.goesse.me?port=9987';
+      navigator.clipboard.writeText(link).then(() => {
+        const btn = event.target;
+        const originalText = btn.innerText;
+        btn.innerText = '✓ Kopiert!';
+        setTimeout(() => {
+          btn.innerText = originalText;
+        }, 2000);
+      }).catch(err => {
+        alert('Fehler beim Kopieren: ' + err);
+      });
+    }
+
+    function attemptRedirect() {
+      protocolAttempted = true;
+      statusText.innerText = '⏳ Versuche Teamspeak zu öffnen...';
+      fallbackSection.classList.remove('show');
+
+      // Methode 1: Direkter Redirect
+      const startTime = Date.now();
+      window.location.href = teamspeakUri;
+
+      // Methode 2: Fallback nach kurzer Zeit, falls Methode 1 nicht funktioniert
+      setTimeout(() => {
+        // Prüfe, ob der Browser den Focus verloren hat (Indiz dafür, dass eine App gestartet wurde)
+        if (document.hasFocus()) {
+          // Focus ist noch beim Browser - die App wurde wahrscheinlich nicht gestartet
+          statusText.innerHTML = '❌ Teamspeak konnte nicht automatisch geöffnet werden.<br>Bitte nutze eine der Optionen unten:';
+          fallbackSection.classList.add('show');
+        } else {
+          statusText.innerText = '✓ Teamspeak wird gestartet...';
+        }
+      }, 2000);
+
+      // Methode 3: Bei Rückkehr zum Browser (Focus-Event) auch Fallback anzeigen
+      window.addEventListener('focus', function onFocus() {
+        setTimeout(() => {
+          if (protocolAttempted && !fallbackSection.classList.contains('show')) {
+            statusText.innerHTML = '❌ Die Verbindung konnte nicht hergestellt werden.<br>Bitte nutze eine der Optionen unten:';
+            fallbackSection.classList.add('show');
+          }
+        }, 500);
+        window.removeEventListener('focus', onFocus);
+      });
+    }
 
     document.getElementById('inviteBtn').addEventListener('click', function(e) {
       e.preventDefault();
-      const statusText = document.getElementById('statusText');
-      statusText.innerText = 'Versuche Teamspeak zu öffnen...';
-
-      // Versuche das Protokoll zu öffnen
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
-      iframe.src = teamspeakUri;
-
-      // Nach 3 Sekunden prüfen, ob es funktioniert hat
-      setTimeout(() => {
-        document.body.removeChild(iframe);
-        // Wenn wir hier sind, hat es wahrscheinlich nicht funktioniert
-        statusText.innerHTML = 'Das Protokoll wird nicht unterstützt. Versuche ein anderes Geräte oder öffne den Link manuell in deinem Teamspeak-Client.';
-      }, 3000);
+      attemptRedirect();
     });
+
+    // Auto-Redirect beim Laden der Seite (optional)
+    // Entkommentiere die nächste Zeile wenn Auto-Redirect gewünscht ist:
+    // window.addEventListener('load', attemptRedirect);
   </script>
 </body>
 </html>
