@@ -215,9 +215,18 @@
       copyToClipboard(this);
     });
 
-    // Auto-Redirect beim Laden der Seite (optional)
-    // Entkommentiere die nächste Zeile wenn Auto-Redirect gewünscht ist:
-    // window.addEventListener('load', attemptRedirect);
+    function togglePassword() {
+        const passwordDisplay = document.getElementById("serverPasswordDisplay");
+       const button = document.querySelector(".toggle-password-button");
+
+        if (passwordDisplay.style.display === "none" || passwordDisplay.style.display === "") {
+         passwordDisplay.style.display = "block";
+         button.textContent = "Server-Passwort ausblenden";
+       } else {
+         passwordDisplay.style.display = "none";
+         button.textContent = "Server-Passwort anzeigen";
+       }
+      }
   </script>
 </body>
 </html>
