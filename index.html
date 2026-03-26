@@ -121,7 +121,7 @@
 
       <p style="margin-top: 15px; font-size: 0.9rem;">Oder kopiere den Link manuell:</p>
       <div class="invite-link" id="inviteLinkDisplay">ts3server://ts.goesse.me?port=9987</div>
-      <button class="copy-btn" onclick="copyToClipboard()">📋 In die Zwischenablage kopieren</button>
+      <button class="copy-btn" id="copyBtn">📋 In die Zwischenablage kopieren</button>
 
       <p style="margin-top: 15px; font-size: 0.85rem; color: #a0b0d0;">
         Öffne danach Teamspeak und verwende den Link in der Adressleiste oder beim Verbindungsmenü.
@@ -135,14 +135,15 @@
     const fallbackSection = document.getElementById('fallbackSection');
     let protocolAttempted = false;
 
-    function copyToClipboard() {
+    function copyToClipboard(btn) {
       const link = 'ts3server://ts.goesse.me?port=9987';
       navigator.clipboard.writeText(link).then(() => {
-        const btn = event.target;
         const originalText = btn.innerText;
         btn.innerText = '✓ Kopiert!';
+        btn.disabled = true;
         setTimeout(() => {
           btn.innerText = originalText;
+          btn.disabled = false;
         }, 2000);
       }).catch(err => {
         alert('Fehler beim Kopieren: ' + err);
@@ -185,6 +186,11 @@
     document.getElementById('inviteBtn').addEventListener('click', function(e) {
       e.preventDefault();
       attemptRedirect();
+    });
+
+    // Copy-Button Event-Listener
+    document.getElementById('copyBtn').addEventListener('click', function() {
+      copyToClipboard(this);
     });
 
     // Auto-Redirect beim Laden der Seite (optional)
