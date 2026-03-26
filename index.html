@@ -64,12 +64,21 @@
     document.getElementById('inviteBtn').addEventListener('click', function(e) {
       e.preventDefault();
       const statusText = document.getElementById('statusText');
-      statusText.innerText = 'Teamspeak wird gestartet...';
-      window.location.href = teamspeakUri;
+      statusText.innerText = 'Versuche Teamspeak zu öffnen...';
+
+      // Versuche das Protokoll zu öffnen
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+      iframe.src = teamspeakUri;
+
+      // Nach 3 Sekunden prüfen, ob es funktioniert hat
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+        // Wenn wir hier sind, hat es wahrscheinlich nicht funktioniert
+        statusText.innerHTML = 'Das Protokoll wird nicht unterstützt. Versuche ein anderes Geräte oder öffne den Link manuell in deinem Teamspeak-Client.';
+      }, 3000);
     });
   </script>
-</body>
-</html>
-  </div>
 </body>
 </html>
