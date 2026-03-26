@@ -60,33 +60,13 @@
 
   <script>
     const teamspeakUri = 'ts3server://ts.goesse.me?port=9987';
-    const downloadUrl = 'https://www.teamspeak.com/en/downloads/';
 
-    function checkAndRedirect() {
+    document.getElementById('inviteBtn').addEventListener('click', function(e) {
+      e.preventDefault();
       const statusText = document.getElementById('statusText');
-
       statusText.innerText = 'Teamspeak wird gestartet...';
-
-      // Versuche, Teamspeak zu öffnen
-      try {
-        window.location.href = teamspeakUri;
-      } catch (e) {
-        // Fallback, falls das Protokoll blockiert wird
-        statusText.innerText = 'Fehler beim Öffnen von Teamspeak. Bitte manuell installieren.';
-        setTimeout(() => {
-          window.location.href = downloadUrl;
-        }, 2000);
-      }
-
-      // Hinweis anzeigen
-      setTimeout(() => {
-        if (document.hasFocus()) {
-          statusText.innerText = 'Wenn Teamspeak nicht startet, klicke hier: <a href="' + downloadUrl + '" target="_blank">Download Teamspeak</a>';
-        }
-      }, 3000);
-    }
-
-    document.getElementById('inviteBtn').addEventListener('click', checkAndRedirect);
+      window.location.href = teamspeakUri;
+    });
   </script>
 </body>
 </html>
