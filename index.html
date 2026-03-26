@@ -139,7 +139,7 @@
       <div class="invite-link" id="inviteLinkDisplay">ts.goesse.me:9987</div>
       
       <div class="password-container">
-        <button onclick="togglePassword()" class="toggle-password-button">Server-Passwort anzeigen</button>
+        <button onmousedown="showPassword()" onmouseup="hidePassword()" onmouseleave="hidePassword()" class="toggle-password-button">Server-Passwort anzeigen</button>
         <div class="invite-link" id="serverPasswordDisplay" style="display: none;">
           1337
         </div>
@@ -227,6 +227,13 @@
          button.textContent = "Server-Passwort anzeigen";
        }
       }
+      function showPassword() {
+  document.getElementById("serverPasswordDisplay").style.display = "block";
+}
+
+function hidePassword() {
+  document.getElementById("serverPasswordDisplay").style.display = "none";
+}
   </script>
 </body>
 </html>
